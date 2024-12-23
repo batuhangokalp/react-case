@@ -29,7 +29,7 @@ const Login = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen w-[50%]">
+    <div className="flex justify-center items-center min-h-screen">
       <div className="w-full max-w-md bg-white p-8 rounded-lg shadow-md">
         <h2 className="text-2xl font-semibold text-center mb-6">Giriş Yap</h2>
         {error && <div className="mb-4 text-red-500">{error}</div>}
