@@ -14,10 +14,8 @@ const firebaseConfig = {
   appId: "1:597203293195:web:0e11123a6955e8fdd28c8b",
 };
 
-// Firebase uygulamasını başlat
 const app = initializeApp(firebaseConfig);
 
-// Firebase Auth servisini alın
 const auth = getAuth(app);
 
 export { auth, signInWithEmailAndPassword, createUserWithEmailAndPassword };
