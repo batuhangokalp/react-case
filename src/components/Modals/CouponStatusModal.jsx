@@ -15,7 +15,11 @@ const CouponStatusModal = ({ status, closeSuccessModal, coupons }) => {
         </h2>
         <p className="text-gray-700 mb-4">
           {status === "Success"
-            ? `Kupon başarıyla oluşturuldu. ${coupons?.Kupon.code} - ${coupons?.Kupon.amount} `
+            ? coupons.length > 0
+              ? `Kupon başarıyla oluşturuldu: ${
+                  coupons[coupons.length - 1]?.code
+                } - ${coupons[coupons.length - 1]?.amount}`
+              : "Kupon verisi bulunamadı."
             : "Kupon oluşturma işlemi başarısız."}
         </p>
         <button
@@ -34,6 +38,5 @@ export default CouponStatusModal;
 CouponStatusModal.propTypes = {
   closeSuccessModal: PropTypes.func,
   status: PropTypes.string,
-  coupons: PropTypes.object,
-
+  coupons: PropTypes.array,
 };

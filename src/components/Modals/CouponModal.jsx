@@ -10,7 +10,7 @@ const CouponModal = ({ setCreateCouponModal, balanceName, balanceValue }) => {
   const [errorCoupon, setErrorCoupon] = useState(false);
 
   const dispatch = useDispatch();
-  const coupons = useSelector((state) => state.coupon.Kuponlar); // Redux'dan kuponları çekiyoruz
+  const coupons = useSelector((state) => state.coupon.Kuponlar);
 
   const createRandomCouponCode = () => {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -40,16 +40,19 @@ const CouponModal = ({ setCreateCouponModal, balanceName, balanceValue }) => {
       const couponCode = createRandomCouponCode();
       const coupon = { code: couponCode, amount: couponAmount };
 
+      // Redux ve localStorage'a kaydediyoruz
       dispatch(setCoupon(coupon));
+      localStorage.setItem("coupon", JSON.stringify(coupon));
 
+      // Modal'ı gösteriyoruz
       setCouponModal(true);
     }
   };
 
   const closeSuccessModal = () => {
-    setCouponModal(false);
+    setCouponModal(false);  // Sadece modal kapanacak
     setCouponAmount("");
-    setCreateCouponModal(false);
+    setCreateCouponModal(false); // Coupon oluşturma modali kapanacak
   };
 
   return (
