@@ -1,6 +1,8 @@
 import AuthPage from "./pages/AuthPage";
 import { Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage";
+import BalancePage from "./pages/BalancePage";
+import CouponPage from "./pages/CouponPage";
 import "./App.css";
 
 function App() {
@@ -12,6 +14,8 @@ function App() {
       ) : (
         <Route path="/" element={<AuthPage />} />
       )}
+      <Route path="/balances" element={<BalancePage />} />
+      <Route path="/coupons" element={<CouponPage />} />
     </Routes>
   );
 }
