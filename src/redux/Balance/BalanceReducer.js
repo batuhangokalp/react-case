@@ -1,11 +1,21 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  "Yakıt Bakiyesi": 0,
-  "Nakit Bakiyesi": 0,
-  "Uçuş Bakiyesi": 0,
-  "Yol Geçiş Bakiyesi": 0,
-  "Yemek Bakiyesi": 0,
+  "Yakıt Bakiyesi": localStorage.getItem("fuel")
+    ? Number(localStorage.getItem("fuel"))
+    : 0,
+  "Nakit Bakiyesi": localStorage.getItem("cash")
+    ? Number(localStorage.getItem("cash"))
+    : 0,
+  "Uçuş Bakiyesi": localStorage.getItem("flight")
+    ? Number(localStorage.getItem("flight"))
+    : 0,
+  "Yol Geçiş Bakiyesi": localStorage.getItem("toll")
+    ? Number(localStorage.getItem("toll"))
+    : 0,
+  "Yemek Bakiyesi": localStorage.getItem("food")
+    ? Number(localStorage.getItem("food"))
+    : 0,
 };
 
 const balanceSlice = createSlice({
@@ -13,19 +23,19 @@ const balanceSlice = createSlice({
   initialState,
   reducers: {
     setFuelBalance: (state, action) => {
-      state.fuel = action.payload;
+      state["Yakıt Bakiyesi"] += action.payload;
     },
     setCashBalance: (state, action) => {
-      state.cash = action.payload;
+      state["Nakit Bakiyesi"] += action.payload;
     },
     setFlightBalance: (state, action) => {
-      state.flight = action.payload;
+      state["Uçuş Bakiyesi"] += action.payload;
     },
     setTollBalance: (state, action) => {
-      state.toll = action.payload;
+      state["Yol Geçiş Bakiyesi"] += action.payload;
     },
     setFoodBalance: (state, action) => {
-      state.food = action.payload;
+      state["Yemek Bakiyesi"] += action.payload;
     },
   },
 });
