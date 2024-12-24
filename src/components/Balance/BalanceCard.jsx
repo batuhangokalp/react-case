@@ -1,6 +1,6 @@
+import { useState } from "react";
 import PropTypes from "prop-types";
 import PaymentModal from "../Modals/PaymentModal";
-import { useState } from "react";
 
 const BalanceCard = ({ balanceName, balanceValue }) => {
   const [paymentModal, setPaymentModal] = useState(false);

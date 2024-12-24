@@ -1,7 +1,8 @@
 import { useState } from "react";
 import PropTypes from "prop-types";
-import CreditCard from "../Balance/PaymentMethod/CreditCard";
 import Credit from "../Balance/PaymentMethod/Credit";
+import CreditCard from "../Balance/PaymentMethod/CreditCard";
+
 
 const PaymentModal = ({ balanceName, balanceValue, setPaymentModal }) => {
   const [isSuccess, setIsSuccess] = useState(false);
