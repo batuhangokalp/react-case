@@ -20,68 +20,21 @@ const Credit = ({
 }) => {
   const dispatch = useDispatch();
 
+  // State Variables
+  const [errorMsg, setErrorMsg] = useState("");
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     idNumber: "",
     creditAmount: "",
   });
-
+  // #region Helper Functions
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-  };
-
-  const handleSubmit = (e) => {
-    const localStorageFuel = Number(localStorage.getItem("fuel"));
-    const localStorageCash = Number(localStorage.getItem("cash"));
-    const localStorageFlight = Number(localStorage.getItem("flight"));
-    const localStorageToll = Number(localStorage.getItem("toll"));
-    const localStorageFood = Number(localStorage.getItem("food"));
-
-    e.preventDefault();
-    const { firstName, lastName, idNumber, creditAmount } = formData;
-
-    if (!firstName || !lastName || !idNumber || !creditAmount) {
-      alert("Lütfen tüm alanları doldurunuz!");
-      return;
-    }
-
-    if (idNumber.length !== 11 || isNaN(Number(idNumber))) {
-      alert("T.C. Kimlik numarası 11 haneli ve sadece rakam içermelidir!");
-      return;
-    }
-
-    if (isNaN(Number(creditAmount)) || Number(creditAmount) <= 0) {
-      alert("Kredi tutarı geçerli bir sayı olmalıdır!");
-      return;
-    }
-
-    if (creditAmount > 10000) {
-      setIsNotSuccess(true);
-    } else {
-      const amountToSave = Number(creditAmount);
-      if (balanceName === "Yakıt Bakiyesi") {
-        dispatch(setFuelBalance(amountToSave));
-        localStorage.setItem("fuel", amountToSave + localStorageFuel);
-      } else if (balanceName === "Nakit Bakiyesi") {
-        dispatch(setCashBalance(amountToSave));
-        localStorage.setItem("cash", amountToSave + localStorageCash);
-      } else if (balanceName === "Uçuş Bakiyesi") {
-        dispatch(setFlightBalance(amountToSave));
-        localStorage.setItem("flight", amountToSave + localStorageFlight);
-      } else if (balanceName === "Yol Geçiş Bakiyesi") {
-        dispatch(setTollBalance(amountToSave));
-        localStorage.setItem("toll", amountToSave + localStorageToll);
-      } else if (balanceName === "Yemek Bakiyesi") {
-        dispatch(setFoodBalance(amountToSave));
-        localStorage.setItem("food", amountToSave + localStorageFood);
-      }
-      setIsSuccess(true);
-    }
   };
 
   const closeSuccessModal = () => {
@@ -95,6 +48,68 @@ const Credit = ({
       creditAmount: "",
     });
   };
+  // #endregion
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const { firstName, lastName, idNumber, creditAmount } = formData;
+    const amountToSave = Number(creditAmount);
+
+    const balances = {
+      fuel: Number(localStorage.getItem("fuel")),
+      cash: Number(localStorage.getItem("cash")),
+      flight: Number(localStorage.getItem("flight")),
+      toll: Number(localStorage.getItem("toll")),
+      food: Number(localStorage.getItem("food")),
+    };
+
+    if (!firstName || !lastName || !idNumber || !creditAmount) {
+      setErrorMsg("Lütfen tüm alanları doldurunuz!");
+      setIsNotSuccess(true);
+
+      return;
+    }
+
+    if (idNumber.length !== 11 || isNaN(Number(idNumber))) {
+      setErrorMsg(
+        "T.C. Kimlik numarası 11 haneli ve sadece rakam içermelidir!"
+      );
+      setIsNotSuccess(true);
+
+      return;
+    }
+
+    if (isNaN(amountToSave) || amountToSave <= 0) {
+      setErrorMsg("Kredi tutarı geçerli bir sayı olmalıdır!");
+      setIsNotSuccess(true);
+      return;
+    }
+
+    if (amountToSave > 10000) {
+      setErrorMsg("Kredi tutarı 10.000 TL’den yüksek olamaz!");
+      setIsNotSuccess(true);
+      return;
+    }
+
+    const balanceActions = {
+      "Yakıt Bakiyesi": { action: setFuelBalance, key: "fuel" },
+      "Nakit Bakiyesi": { action: setCashBalance, key: "cash" },
+      "Uçuş Bakiyesi": { action: setFlightBalance, key: "flight" },
+      "Yol Geçiş Bakiyesi": { action: setTollBalance, key: "toll" },
+      "Yemek Bakiyesi": { action: setFoodBalance, key: "food" },
+    };
+
+    const selectedBalance = balanceActions[balanceName];
+
+    if (selectedBalance) {
+      const { action, key } = selectedBalance;
+      dispatch(action(amountToSave));
+      localStorage.setItem(key, amountToSave + balances[key]);
+      setIsSuccess(true);
+    }
+  };
+
   return (
     <div>
       <h2 className="text-xl font-semibold mb-4">Kredi Başvuru Formu</h2>
@@ -134,7 +149,7 @@ const Credit = ({
         />
         <button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded w-full mt-5 opacity-paymentAmount hover:opacity-80"
+          className="bg-blue-500 text-white py-2 px-4 rounded w-full mt-5 opacity-100 hover:opacity-80"
         >
           Başvuru Yap
         </button>
@@ -152,6 +167,7 @@ const Credit = ({
           status="Not Success"
           title="Credit"
           closeSuccessModal={closeSuccessModal}
+          errorMsg={errorMsg}
         />
       )}
     </div>
@@ -163,7 +179,6 @@ export default Credit;
 Credit.propTypes = {
   setPaymentModal: PropTypes.func,
   balanceName: PropTypes.string,
-  paymentAmount: PropTypes.number,
   isSuccess: PropTypes.bool,
   setIsSuccess: PropTypes.func,
   isNotSuccess: PropTypes.bool,

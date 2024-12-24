@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 
-const PaymentStatusModal = ({ status, title, closeSuccessModal }) => {
+const PaymentStatusModal = ({ status, title, closeSuccessModal, errorMsg }) => {
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded shadow-lg text-center">
@@ -19,7 +19,7 @@ const PaymentStatusModal = ({ status, title, closeSuccessModal }) => {
             : title === "Credit Cart" && status === "Success"
             ? "Ödeme işlemi gerçekleşti."
             : title === "Credit" && status === "Not Success"
-            ? "Kredi başvurunuz olumsuz."
+            ? errorMsg
             : "Ödeme işlemi başarısız."}
         </p>
         <button
@@ -39,4 +39,5 @@ PaymentStatusModal.propTypes = {
   closeSuccessModal: PropTypes.func,
   status: PropTypes.string,
   title: PropTypes.string,
+  errorMsg: PropTypes.string,
 };

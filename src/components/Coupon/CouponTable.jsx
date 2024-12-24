@@ -16,14 +16,14 @@ const CouponTable = () => {
           </tr>
         </thead>
         <tbody>
-          {coupons.length === 0 ? (
+          {coupons?.length === 0 ? (
             <tr>
               <td colSpan="4" className="border px-4 py-2 text-center">
                 Henüz kupon oluşturulmadı.
               </td>
             </tr>
           ) : (
-            coupons.map((coupon, index) => (
+            coupons?.map((coupon, index) => (
               <tr key={index}>
                 <td className="border px-4 py-2">{index + 1}</td>
                 <td className="border px-4 py-2">{coupon.code}</td>

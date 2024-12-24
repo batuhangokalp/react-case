@@ -1,21 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const getLocalStorageValue = (key) =>
+  localStorage.getItem(key) ? Number(localStorage.getItem(key)) : 0;
+
 const initialState = {
-  "Yakıt Bakiyesi": localStorage.getItem("fuel")
-    ? Number(localStorage.getItem("fuel"))
-    : 0,
-  "Nakit Bakiyesi": localStorage.getItem("cash")
-    ? Number(localStorage.getItem("cash"))
-    : 0,
-  "Uçuş Bakiyesi": localStorage.getItem("flight")
-    ? Number(localStorage.getItem("flight"))
-    : 0,
-  "Yol Geçiş Bakiyesi": localStorage.getItem("toll")
-    ? Number(localStorage.getItem("toll"))
-    : 0,
-  "Yemek Bakiyesi": localStorage.getItem("food")
-    ? Number(localStorage.getItem("food"))
-    : 0,
+  "Yakıt Bakiyesi": getLocalStorageValue("fuel"),
+  "Nakit Bakiyesi": getLocalStorageValue("cash"),
+  "Uçuş Bakiyesi": getLocalStorageValue("flight"),
+  "Yol Geçiş Bakiyesi": getLocalStorageValue("toll"),
+  "Yemek Bakiyesi": getLocalStorageValue("food"),
 };
 
 const balanceSlice = createSlice({

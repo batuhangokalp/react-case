@@ -1,6 +1,11 @@
 import PropTypes from "prop-types";
 
-const CouponStatusModal = ({ status, closeSuccessModal, coupons }) => {
+const CouponStatusModal = ({
+  status,
+  closeSuccessModal,
+  coupons,
+  errorMsg,
+}) => {
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded shadow-lg text-center">
@@ -20,7 +25,7 @@ const CouponStatusModal = ({ status, closeSuccessModal, coupons }) => {
                   coupons[coupons.length - 1]?.code
                 } - ${coupons[coupons.length - 1]?.amount}`
               : "Kupon verisi bulunamadı."
-            : "Kupon oluşturma işlemi başarısız."}
+            : errorMsg}
         </p>
         <button
           onClick={closeSuccessModal}
@@ -39,4 +44,5 @@ CouponStatusModal.propTypes = {
   closeSuccessModal: PropTypes.func,
   status: PropTypes.string,
   coupons: PropTypes.array,
+  errorMsg: PropTypes.string,
 };

@@ -5,7 +5,7 @@ import CouponModal from "../Modals/CouponModal";
 const BalanceTable = () => {
   const [createCouponModal, setCreateCouponModal] = useState(false);
   const [balanceName, setBalanceName] = useState("");
-  const [balanceValue, setBalanceValue] = useState(Number);
+  const [balanceValue, setBalanceValue] = useState(0);
 
   const balances = useSelector((state) => state.balance);
 

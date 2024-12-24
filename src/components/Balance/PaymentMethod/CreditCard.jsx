@@ -19,13 +19,16 @@ const CreditCard = ({
   setIsNotSuccess,
 }) => {
   const dispatch = useDispatch();
-  const [paymentAmount, setPaymentAmount] = useState(Number);
+
+  // State Variables
+  const [paymentAmount, setPaymentAmount] = useState(0);
   const [cardInfo, setCardInfo] = useState({
     cardNumber: "",
     expiryDate: "",
     cvv: "",
   });
 
+  // #region Helper Functions
   const handleCardInfoChange = (e) => {
     const { name, value } = e.target;
     setCardInfo((prevCardInfo) => ({
@@ -36,37 +39,12 @@ const CreditCard = ({
   const handleAmountChange = (e) => {
     setPaymentAmount(e.target.value);
   };
-  const handleSubmit = (e) => {
-    const localStorageFuel = Number(localStorage.getItem("fuel"));
-    const localStorageCash = Number(localStorage.getItem("cash"));
-    const localStorageFlight = Number(localStorage.getItem("flight"));
-    const localStorageToll = Number(localStorage.getItem("toll"));
-    const localStorageFood = Number(localStorage.getItem("food"));
 
-    e.preventDefault();
-    if (cardInfo.cvv === "999") {
-      setIsNotSuccess(true);
-    } else if (cardInfo.cvv === "000") {
-      const amountToSave = Number(paymentAmount);
-      if (balanceName === "Yakıt Bakiyesi") {
-        dispatch(setFuelBalance(amountToSave));
-        localStorage.setItem("fuel", amountToSave + localStorageFuel);
-      } else if (balanceName === "Nakit Bakiyesi") {
-        dispatch(setCashBalance(amountToSave));
-        localStorage.setItem("cash", amountToSave + localStorageCash);
-      } else if (balanceName === "Uçuş Bakiyesi") {
-        dispatch(setFlightBalance(amountToSave));
-        localStorage.setItem("flight", amountToSave + localStorageFlight);
-      } else if (balanceName === "Yol Geçiş Bakiyesi") {
-        dispatch(setTollBalance(amountToSave));
-        localStorage.setItem("toll", amountToSave + localStorageToll);
-      } else if (balanceName === "Yemek Bakiyesi") {
-        dispatch(setFoodBalance(amountToSave));
-        localStorage.setItem("food", amountToSave + localStorageFood);
-      }
-      setIsSuccess(true);
-    }
+  const CVV_CODES = {
+    INVALID: "999",
+    TEST_SUCCESS: "000",
   };
+
   const closeSuccessModal = () => {
     setIsSuccess(false);
     setPaymentModal(false);
@@ -77,6 +55,38 @@ const CreditCard = ({
       cvv: "",
     });
   };
+  // #endregion
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const amountToSave = Number(paymentAmount);
+
+    if (cardInfo.cvv === CVV_CODES.INVALID) {
+      setIsNotSuccess(true);
+      return;
+    }
+
+    if (cardInfo.cvv === CVV_CODES.TEST_SUCCESS) {
+      const balanceActions = {
+        "Yakıt Bakiyesi": { action: setFuelBalance, storageKey: "fuel" },
+        "Nakit Bakiyesi": { action: setCashBalance, storageKey: "cash" },
+        "Uçuş Bakiyesi": { action: setFlightBalance, storageKey: "flight" },
+        "Yol Geçiş Bakiyesi": { action: setTollBalance, storageKey: "toll" },
+        "Yemek Bakiyesi": { action: setFoodBalance, storageKey: "food" },
+      };
+
+      if (balanceActions[balanceName]) {
+        const { action, storageKey } = balanceActions[balanceName];
+        dispatch(action(amountToSave));
+        localStorage.setItem(
+          storageKey,
+          amountToSave + Number(localStorage.getItem(storageKey))
+        );
+        setIsSuccess(true);
+      }
+    }
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit} className="w-full mt-6">
@@ -141,7 +151,7 @@ const CreditCard = ({
 
         <button
           type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded w-full mt-4  opacity-paymentAmount hover:opacity-80"
+          className="bg-blue-500 text-white py-2 px-4 rounded w-full mt-4 hover:opacity-80"
         >
           Ödemeyi Tamamla
         </button>
@@ -169,7 +179,6 @@ export default CreditCard;
 CreditCard.propTypes = {
   setPaymentModal: PropTypes.func,
   balanceName: PropTypes.string,
-  paymentAmount: PropTypes.number,
   isSuccess: PropTypes.bool,
   setIsSuccess: PropTypes.func,
   isNotSuccess: PropTypes.bool,

@@ -5,13 +5,16 @@ import PropTypes from "prop-types";
 import CouponStatusModal from "./CouponStatusModal";
 
 const CouponModal = ({ setCreateCouponModal, balanceName, balanceValue }) => {
+  // State Variables
   const [couponAmount, setCouponAmount] = useState("");
   const [couponModal, setCouponModal] = useState(false);
   const [errorCoupon, setErrorCoupon] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
 
   const dispatch = useDispatch();
   const coupons = useSelector((state) => state.coupon.Kuponlar);
 
+  // #region Helper Functions
   const createRandomCouponCode = () => {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let couponCode = "";
@@ -22,6 +25,13 @@ const CouponModal = ({ setCreateCouponModal, balanceName, balanceValue }) => {
     return couponCode;
   };
 
+  const closeSuccessModal = () => {
+    setCouponModal(false);
+    setCouponAmount("");
+    setCreateCouponModal(false);
+  };
+  // #endregion
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -30,29 +40,23 @@ const CouponModal = ({ setCreateCouponModal, balanceName, balanceValue }) => {
       isNaN(Number(couponAmount)) ||
       Number(couponAmount) <= 0
     ) {
-      alert("Lütfen geçerli bir kupon tutarı giriniz!");
+      setErrorCoupon(true);
+      setErrorMsg("Lütfen geçerli bir kupon tutarı giriniz!");
       return;
     }
 
     if (couponAmount > balanceValue) {
       setErrorCoupon(true);
+      setErrorMsg("Tutar, mevcut bakiyeden yüksek olamaz!");
     } else {
       const couponCode = createRandomCouponCode();
       const coupon = { code: couponCode, amount: couponAmount };
 
-      // Redux ve localStorage'a kaydediyoruz
       dispatch(setCoupon(coupon));
       localStorage.setItem("coupon", JSON.stringify(coupon));
 
-      // Modal'ı gösteriyoruz
       setCouponModal(true);
     }
-  };
-
-  const closeSuccessModal = () => {
-    setCouponModal(false);  // Sadece modal kapanacak
-    setCouponAmount("");
-    setCreateCouponModal(false); // Coupon oluşturma modali kapanacak
   };
 
   return (
@@ -101,6 +105,7 @@ const CouponModal = ({ setCreateCouponModal, balanceName, balanceValue }) => {
         <CouponStatusModal
           status="Not Success"
           closeSuccessModal={closeSuccessModal}
+          errorMsg={errorMsg}
         />
       )}
     </div>
