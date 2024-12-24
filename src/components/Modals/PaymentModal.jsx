@@ -4,16 +4,14 @@ import CreditCard from "../Balance/PaymentMethod/CreditCard";
 import Credit from "../Balance/PaymentMethod/Credit";
 
 const PaymentModal = ({ balanceName, balanceValue, setPaymentModal }) => {
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isNotSuccess, setIsNotSuccess] = useState(false);
+
   const [selectedPaymentMethod, setSelectedPaymentMethod] =
     useState("Credit Card");
-  const [paymentAmount, setPaymentAmount] = useState(Number);
 
   const handlePaymentMethodChange = (method) => {
     setSelectedPaymentMethod(method);
-  };
-
-  const handleAmountChange = (e) => {
-    setPaymentAmount(e.target.value);
   };
 
   return (
@@ -33,16 +31,6 @@ const PaymentModal = ({ balanceName, balanceValue, setPaymentModal }) => {
         </h3>
 
         <div className="mt-6 w-full flex flex-col items-center">
-          <div className="mb-6 w-full flex flex-col items-center">
-            <input
-              id="paymentAmount"
-              type="number"
-              value={paymentAmount}
-              onChange={handleAmountChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              placeholder="Ödeme miktarını girin"
-            />
-          </div>
           <p className="text-lg font-semibold mb-4">Ödeme Yöntemini Seçin</p>
 
           <div className="w-full flex flex-row">
@@ -74,13 +62,19 @@ const PaymentModal = ({ balanceName, balanceValue, setPaymentModal }) => {
           <CreditCard
             setPaymentModal={setPaymentModal}
             balanceName={balanceName}
-            paymentAmount={paymentAmount}
+            isSuccess={isSuccess}
+            setIsSuccess={setIsSuccess}
+            isNotSuccess={isNotSuccess}
+            setIsNotSuccess={setIsNotSuccess}
           />
         ) : (
           <Credit
             setPaymentModal={setPaymentModal}
             balanceName={balanceName}
-            paymentAmount={paymentAmount}
+            isSuccess={isSuccess}
+            setIsSuccess={setIsSuccess}
+            isNotSuccess={isNotSuccess}
+            setIsNotSuccess={setIsNotSuccess}
           />
         )}
       </div>
