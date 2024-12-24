@@ -1,5 +1,4 @@
 import Header from "../components/Layout/Header";
-import Footer from "../components/Layout/Footer";
 import Proptypes from "prop-types";
 
 const MainLayout = ({ children }) => {
@@ -9,7 +8,6 @@ const MainLayout = ({ children }) => {
     <>
       {storedAuth && <Header />}
       {children}
-      {storedAuth && <Footer />}
     </>
   );
 };
